@@ -10,15 +10,14 @@ RUN apt-get update && \
     localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
 ENV LANG en_US.UTF-8
 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends git ca-certificates && \
-        git clone https://github.com/pyenv/pyenv.git .pyenv && \
-        (cd .pyenv && git checkout v1.2.2) && \
-    apt-get purge -y --auto-remove git ca-certificates && \
-    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
 ENV PYENV_ROOT="/.pyenv" \
     PATH="/.pyenv/bin:/.pyenv/shims:$PATH"
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends git ca-certificates curl && \
+    curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash && \
+    apt-get purge -y --auto-remove ca-certificates curl && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
